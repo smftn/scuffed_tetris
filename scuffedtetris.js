@@ -3,6 +3,21 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
+
+var paused = false;
+
+function togglePause() //p thisnowork
+{
+    if (!paused)
+    {
+        paused = true;
+    } else if (paused)
+    {
+       paused= false;
+    }
+
+}
+
 function arenaSweep() {
     let rowCount = 1;
     outer: for (let y = arena.length -1; y > 0; --y) {
@@ -202,6 +217,13 @@ function update(time = 0) {
     }
 
     lastTime = time;
+    
+    if(paused){ //pauses but doents resume, stuck
+        context.font = "3px Georgia";
+        context.fillStyle = "#ff85a2";
+        context.fillText('Paused', 1, 10);
+        update();
+    }
 
     draw();
     requestAnimationFrame(update);
@@ -211,22 +233,6 @@ function updateScore() {
     document.getElementById('score').innerText = player.score;
 }
 
-function togglePause() //notworking
-{
-    if (!paused)
-    {
-        paused = true;
-    } else if (paused)
-    {
-       paused= false;
-    }
-
-    draw();  //notworking
-    if(!paused)
-    { 
-    update(); 
-    }
-}
 
 document.addEventListener('keydown', event => {
     if (event.keyCode === 65) {
@@ -239,16 +245,12 @@ document.addEventListener('keydown', event => {
         playerRotate(-1);
     } else if (event.keyCode === 32) {
         playerRotate(1);
-    }
-});
-
-document.addEventListener('keydown', function (e) { //notworking
-    var key = e.keyCode;
-    if (key === 27)
-    {
+    } else if (event.keyCode === 27) { //pause
         togglePause();
     }
 });
+
+
 
 const colors = [
     null,
